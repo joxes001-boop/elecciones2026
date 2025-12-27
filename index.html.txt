@@ -1,29 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Votación 2025</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elecciones 2025 - Vota Ahora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
 </head>
-<body>
-    <h1>Elige tu Candidato</h1>
-    <button onclick="votar('Candidato A')">Votar por A</button>
-    <button onclick="votar('Candidato B')">Votar por B</button>
+<body class="flex items-center justify-center p-6">
+
+    <div class="max-w-4xl w-full">
+        <!-- Encabezado -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                Elecciones 2025
+            </h1>
+            <p class="text-gray-400 text-lg">Tu voto es privado y requiere validación de ubicación por GPS.</p>
+        </header>
+
+        <!-- Contenedor de Candidatos -->
+        <div class="grid md:grid-cols-2 gap-8">
+            
+            <!-- Candidato 1 -->
+            <div class="glass p-8 rounded-3xl text-center transform transition hover:scale-105">
+                <img src="images.unsplash.com" 
+                     alt="Candidato A" class="w-32 h-32 mx-auto rounded-full border-4 border-blue-500 mb-4 object-cover">
+                <h2 class="text-2xl font-bold mb-2">Fórmula Libertad</h2>
+                <p class="text-gray-400 mb-6 italic">"Por un futuro digital y seguro"</p>
+                <button onclick="procesarVoto('Fórmula Libertad')" 
+                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/20">
+                    Votar por esta fórmula
+                </button>
+            </div>
+
+            <!-- Candidato 2 -->
+            <div class="glass p-8 rounded-3xl text-center transform transition hover:scale-105">
+                <img src="images.unsplash.com" 
+                     alt="Candidato B" class="w-32 h-32 mx-auto rounded-full border-4 border-emerald-500 mb-4 object-cover">
+                <h2 class="text-2xl font-bold mb-2">Unión Progreso</h2>
+                <p class="text-gray-400 mb-6 italic">"Innovación para cada ciudadano"</p>
+                <button onclick="procesarVoto('Unión Progreso')" 
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-emerald-500/20">
+                    Votar por esta fórmula
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Estado -->
+        <div id="status" class="mt-12 text-center text-sm font-mono text-gray-500">
+            Esperando selección...
+        </div>
+    </div>
 
     <script>
-        function votar(candidato) {
-            // Solicitar ubicación
+        function procesarVoto(nombre) {
+            const status = document.getElementById('status');
+            status.innerText = "Solicitando acceso GPS...";
+
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition((pos) => {
                     const lat = pos.coords.latitude;
                     const lon = pos.coords.longitude;
-                    alert(`Voto por ${candidato} registrado en: ${lat}, ${lon}`);
-                    // Aquí enviarías los datos a una base de datos gratuita
-                }, () => {
-                    alert("Para votar, debes permitir el acceso a tu ubicación.");
+                    
+                    status.innerHTML = `<span class="text-emerald-400">✔ Voto capturado en: ${lat.toFixed(4)}, ${lon.toFixed(4)}</span>`;
+                    
+                    alert(`¡VOTO REGISTRADO!\nHas elegido a: ${nombre}\nTu ubicación ha sido validada.`);
+                }, (err) => {
+                    status.innerHTML = `<span class="text-red-400">✘ Error: Debes activar el GPS para votar</span>`;
+                    alert("Acceso denegado. No podemos procesar tu voto sin ubicación.");
                 });
-            } else {
-                alert("Tu navegador no soporta geolocalización.");
             }
         }
     </script>
 </body>
 </html>
+
+
+
